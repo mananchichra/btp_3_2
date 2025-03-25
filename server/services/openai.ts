@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { ADR_SYSTEM_PROMPT } from "../../client/src/lib/adr-template";
+import { ADR_SYSTEM_PROMPTS, AVAILABLE_TEMPLATES } from "../../client/src/lib/adr-template";
 import { type GenerateAdrResponse } from "../../shared/schema";
 import { marked } from "marked";
 
@@ -12,21 +12,27 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
  * Generate an ADR using OpenAI models
  * @param prompt User input describing the architectural decision
  * @param model OpenAI model to use (defaults to gpt-4o)
+ * @param templateId Template format to use (defaults to standard)
  * @returns Generated ADR with title and content
  */
 export async function generateOpenAiAdr(
   prompt: string,
-  model: string = "gpt-4o"
+  model: string = "gpt-4o",
+  templateId: string = "standard"
 ): Promise<GenerateAdrResponse> {
   try {
     if (!process.env.OPENAI_API_KEY) {
       throw new Error("OPENAI_API_KEY is not set in environment variables");
     }
 
+    // Get the appropriate system prompt based on the template
+    const template = AVAILABLE_TEMPLATES.find(t => t.id === templateId);
+    const systemPrompt = template?.systemPrompt || ADR_SYSTEM_PROMPTS.standard;
+
     const response = await openai.chat.completions.create({
       model: model,
       messages: [
-        { role: "system", content: ADR_SYSTEM_PROMPT },
+        { role: "system", content: systemPrompt },
         { role: "user", content: prompt }
       ],
       max_tokens: 2000,

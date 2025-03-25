@@ -34,7 +34,8 @@ export const insertAdrSchema = createInsertSchema(adrs).pick({
 // Generate ADR request schema
 export const generateAdrSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
-  model: z.string().min(1, "Model is required")
+  model: z.string().min(1, "Model is required"),
+  templateId: z.string().default("standard").optional()
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

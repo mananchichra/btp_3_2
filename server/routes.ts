@@ -12,15 +12,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/adrs/generate", async (req, res) => {
     try {
       // Validate request body
-      const { prompt, model } = generateAdrSchema.parse(req.body);
+      const { prompt, model, templateId } = generateAdrSchema.parse(req.body);
       
       let result;
       
       // Generate ADR based on model choice
       if (model.startsWith("gpt")) {
-        result = await generateOpenAiAdr(prompt, model);
+        result = await generateOpenAiAdr(prompt, model, templateId);
       } else if (model.startsWith("gemini")) {
-        result = await generateGeminiAdr(prompt, model);
+        result = await generateGeminiAdr(prompt, model, templateId);
       } else {
         return res.status(400).json({ message: "Unsupported model" });
       }
