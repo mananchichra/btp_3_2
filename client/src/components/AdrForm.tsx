@@ -105,7 +105,7 @@ export function AdrForm({ onResult }: AdrFormProps) {
                   <SelectContent>
                     <SelectItem value="gpt-4o">GPT-4o</SelectItem>
                     <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
-                    <SelectItem value="gemini-pro">Gemini Pro</SelectItem>
+                    <SelectItem value="gemini-1.5-pro">Gemini Pro</SelectItem>
                   </SelectContent>
                 </Select>
               </FormItem>

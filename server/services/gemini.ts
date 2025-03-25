@@ -10,7 +10,7 @@ import { marked } from "marked";
  */
 export async function generateGeminiAdr(
   prompt: string,
-  model: string = "gemini-pro"
+  model: string = "gemini-1.5-pro"
 ): Promise<GenerateAdrResponse> {
   try {
     if (!process.env.GEMINI_API_KEY) {
@@ -18,7 +18,7 @@ export async function generateGeminiAdr(
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
-    const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+    const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     
     const response = await fetch(`${apiUrl}?key=${apiKey}`, {
       method: "POST",
