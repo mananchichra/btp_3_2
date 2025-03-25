@@ -1,6 +1,7 @@
 import { ADR_SYSTEM_PROMPT } from "../../client/src/lib/adr-template";
 import { type GenerateAdrResponse } from "../../shared/schema";
 import { marked } from "marked";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 /**
  * Generate an ADR using Google's Gemini models
@@ -18,37 +19,23 @@ export async function generateGeminiAdr(
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
-    const apiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent";
+    // Initialize the Google Generative AI
+    const genAI = new GoogleGenerativeAI(apiKey);
+    // Get the model
+    const geminiModel = genAI.getGenerativeModel({ model });
     
-    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    // Generate content
+    const result = await geminiModel.generateContent({
+      contents: [{ role: "user", parts: [{ text: ADR_SYSTEM_PROMPT + "\n\n" + prompt }] }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2000,
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { text: ADR_SYSTEM_PROMPT },
-              { text: prompt }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2000,
-        }
-      }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Gemini API Error: ${JSON.stringify(errorData)}`);
-    }
-
-    const data = await response.json();
-    const content = data.candidates[0].content.parts[0].text;
+    // Get the response
+    const response = result.response;
+    const content = response.text();
     
     // Extract title from the content (first header)
     const titleMatch = content.match(/^#\s+(.*?)$/m);
