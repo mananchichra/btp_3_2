@@ -10,7 +10,7 @@ import { marked } from "marked";
  */
 export async function generateGeminiAdr(
   prompt: string,
-  model: string = "gemini-1.5-pro"
+  model: string = "gemini-pro"
 ): Promise<GenerateAdrResponse> {
   try {
     if (!process.env.GEMINI_API_KEY) {
@@ -18,7 +18,7 @@ export async function generateGeminiAdr(
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
-    const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    const apiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent";
     
     const response = await fetch(`${apiUrl}?key=${apiKey}`, {
       method: "POST",
@@ -55,7 +55,7 @@ export async function generateGeminiAdr(
     const title = titleMatch ? titleMatch[1].replace(/^ADR\s+\d+:\s+/, '') : "Architectural Decision Record";
     
     // Convert markdown to HTML for rendering
-    const htmlContent = marked(content);
+    const htmlContent = marked.parse(content).toString();
 
     return {
       title,

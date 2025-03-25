@@ -40,7 +40,7 @@ export async function generateOpenAiAdr(
     const title = titleMatch ? titleMatch[1].replace(/^ADR\s+\d+:\s+/, '') : "Architectural Decision Record";
     
     // Convert markdown to HTML for rendering
-    const htmlContent = marked(content);
+    const htmlContent = marked.parse(content).toString();
 
     return {
       title,
