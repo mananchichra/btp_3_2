@@ -4,8 +4,11 @@ import { storage } from "./storage";
 import { generateAdrSchema } from "../shared/schema";
 import { generateOpenAiAdr } from "./services/openai";
 import { generateGeminiAdr } from "./services/gemini";
+import { generateAdrWithOllama } from "./services/ollama";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+
+
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Generate ADR endpoint
@@ -21,7 +24,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         result = await generateOpenAiAdr(prompt, model, templateId);
       } else if (model.startsWith("gemini")) {
         result = await generateGeminiAdr(prompt, model, templateId);
-      } else {
+      } 
+      else if (model.startsWith("Gemma 2B")) {
+        // result = await generateWithOllama(model, prompt);
+        result = await generateAdrWithOllama({ model: "gemma:2b", prompt });
+      }
+      else if(model.startsWith("LLaMA 2")) 
+      {
+        result = await generateAdrWithOllama({ model: "llama2", prompt });
+      }
+      else {
         return res.status(400).json({ message: "Unsupported model" });
       }
       

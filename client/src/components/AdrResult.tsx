@@ -3,7 +3,7 @@ import { Clipboard, Check } from "lucide-react";
 import { useState } from "react";
 import { type GenerateAdrResponse } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
-
+import {marked} from "marked";
 interface AdrResultProps {
   result: GenerateAdrResponse;
 }
@@ -35,6 +35,8 @@ export function AdrResult({ result }: AdrResultProps) {
     }
   };
 
+  const renderedHtml = marked.parse(result.content);
+
   return (
     <div className="mt-8">
       <div className="flex justify-between items-center mb-4">
@@ -59,7 +61,7 @@ export function AdrResult({ result }: AdrResultProps) {
       </div>
       
       <div className="border rounded-md p-6 bg-white overflow-auto prose prose-slate max-w-none">
-        <div dangerouslySetInnerHTML={{ __html: result.content }}></div>
+        <div dangerouslySetInnerHTML={{ __html: renderedHtml }}></div>
       </div>
     </div>
   );
