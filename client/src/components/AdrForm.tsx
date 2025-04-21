@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AVAILABLE_TEMPLATES } from "@/lib/adr-template";
 
 interface AdrFormProps {
-  onResult: (data: GenerateAdrResponse) => void;
+  onResult: (data: GenerateAdrResponse & { id?: number }) => void;
 }
 
 export function AdrForm({ onResult }: AdrFormProps) {
@@ -122,6 +122,7 @@ export function AdrForm({ onResult }: AdrFormProps) {
                     <SelectItem value="gpt-4o">GPT-4o</SelectItem>
                     <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
                     <SelectItem value="gemini-1.5-pro">Gemini Pro</SelectItem>
+                    <SelectItem value="claude-3-7-sonnet-20250219">Claude 3 Sonnet</SelectItem>
                   </SelectContent>
                 </Select>
               </FormItem>
