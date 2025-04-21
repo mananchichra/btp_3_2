@@ -38,6 +38,13 @@ export const generateAdrSchema = z.object({
   templateId: z.string().default("standard").optional()
 });
 
+// Feedback request schema 
+export const feedbackSchema = z.object({
+  adrId: z.number(),
+  feedback: z.string().min(1, "Feedback is required"),
+  model: z.string().min(1, "Model is required"),
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -48,4 +55,12 @@ export type GenerateAdrRequest = z.infer<typeof generateAdrSchema>;
 export type GenerateAdrResponse = {
   title: string;
   content: string;
+};
+
+export type FeedbackRequest = z.infer<typeof feedbackSchema>;
+export type FeedbackResponse = {
+  id: number;
+  title: string;
+  content: string;
+  originalAdrId: number;
 };

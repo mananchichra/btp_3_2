@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { generateAdrSchema } from "../shared/schema";
 import { generateOpenAiAdr } from "./services/openai";
 import { generateGeminiAdr } from "./services/gemini";
+import { generateAnthropicAdr } from "./services/anthropic";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -21,6 +22,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         result = await generateOpenAiAdr(prompt, model, templateId);
       } else if (model.startsWith("gemini")) {
         result = await generateGeminiAdr(prompt, model, templateId);
+      } else if (model.startsWith("claude")) {
+        result = await generateAnthropicAdr(prompt, model, templateId);
       } else {
         return res.status(400).json({ message: "Unsupported model" });
       }

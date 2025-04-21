@@ -8,6 +8,9 @@ export interface IStorage {
   getAdr(id: number): Promise<Adr | undefined>;
   listAdrs(): Promise<Adr[]>;
   createAdr(adr: InsertAdr): Promise<Adr>;
+  // New methods for handling feedback and refinements
+  createRefinedAdr(adr: InsertAdr, originalId: number): Promise<Adr>;
+  getRefinedAdrs(originalId: number): Promise<Adr[]>;
 }
 
 export class MemStorage implements IStorage {
