@@ -22,6 +22,9 @@ export const adrs = pgTable("adrs", {
   model: text("model").notNull(),
   prompt: text("prompt").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  // Fields for tracking refinements
+  originalAdrId: integer("original_adr_id"), // null for original ADRs, populated for refinements
+  feedback: text("feedback"), // Feedback that led to this refinement (null for original ADRs)
 });
 
 export const insertAdrSchema = createInsertSchema(adrs).pick({
@@ -29,6 +32,8 @@ export const insertAdrSchema = createInsertSchema(adrs).pick({
   content: true,
   model: true,
   prompt: true,
+  originalAdrId: true,
+  feedback: true,
 });
 
 // Generate ADR request schema

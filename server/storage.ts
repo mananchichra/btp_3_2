@@ -48,7 +48,11 @@ export class MemStorage implements IStorage {
   }
 
   async listAdrs(): Promise<Adr[]> {
-    return Array.from(this.adrs.values());
+    // Return only original ADRs (not refinements)
+    return Array.from(this.adrs.values()).filter(adr => {
+      // If it has no originalAdrId, it's an original ADR
+      return adr.originalAdrId === null || adr.originalAdrId === undefined;
+    });
   }
 
   async createAdr(insertAdr: InsertAdr): Promise<Adr> {
@@ -56,10 +60,38 @@ export class MemStorage implements IStorage {
     const adr: Adr = { 
       ...insertAdr, 
       id,
-      createdAt: new Date()
+      createdAt: new Date(),
+      originalAdrId: null,
+      feedback: null
     };
     this.adrs.set(id, adr);
     return adr;
+  }
+
+  async createRefinedAdr(insertAdr: InsertAdr, originalId: number): Promise<Adr> {
+    // Create the refined ADR with a reference to the original
+    const id = this.adrCurrentId++;
+    const adr: Adr = { 
+      ...insertAdr, 
+      id,
+      createdAt: new Date(),
+      originalAdrId: originalId,
+      feedback: insertAdr.feedback || null
+    };
+    this.adrs.set(id, adr);
+    return adr;
+  }
+
+  async getRefinedAdrs(originalId: number): Promise<Adr[]> {
+    // Find all ADRs that have this originalAdrId
+    const refinedAdrs = Array.from(this.adrs.values()).filter(adr => 
+      adr.originalAdrId === originalId
+    );
+    
+    // Sort by creation date (newest first)
+    return refinedAdrs.sort((a, b) => 
+      b.createdAt.getTime() - a.createdAt.getTime()
+    );
   }
 }
 
