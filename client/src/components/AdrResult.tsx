@@ -124,6 +124,8 @@ export function AdrResult({ result }: AdrResultProps) {
     });
   };
 
+  const renderedHtml = marked.parse(result.content);
+
   return (
     <div className="w-full mt-6 space-y-6">
       <Card>
@@ -232,6 +234,9 @@ export function AdrResult({ result }: AdrResultProps) {
           </Accordion>
         </Card>
       )}
+      <div className="border rounded-md p-6 bg-white overflow-auto prose prose-slate max-w-none">
+        <div dangerouslySetInnerHTML={{ __html: renderedHtml }}></div>
+      </div>
     </div>
   );
 }
